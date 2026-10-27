@@ -26,6 +26,7 @@ export function createApp() {
     .filter(Boolean);
 
   app.disable("x-powered-by");
+  app.set("trust proxy", "loopback");
 
   app.use(
     cors({

@@ -12,6 +12,7 @@ import {
 } from '../src/middleware/uploadProjectReview.js'
 import {
   contactKeys,
+  legacyProductFormKey,
   legacyNewsletterKey,
   newsletterKey,
   projectReviewSubmissionSchema,
@@ -168,4 +169,33 @@ test('requires a specified product form when Other is selected', () => {
     { abortEarly: false },
   )
   assert.equal(specified.error, undefined)
+})
+
+test('accepts and normalizes the legacy Product form field', () => {
+  const review = {
+    [contactKeys.name]: 'Legacy Product',
+    [contactKeys.email]: 'legacy-product@example.com',
+    [legacyProductFormKey]: 'Other: Software',
+  }
+
+  const acknowledgementLabels = [
+    'I confirm that the information provided is accurate to the best of my knowledge.',
+    'Packaging Consultants USA may contact me regarding this Project Review.',
+    'I understand that submitting a Project Review does not create a contract or require either party to proceed.',
+    'I acknowledge the Privacy Policy and Terms of Use.',
+  ]
+  acknowledgementLabels.forEach((label) => {
+    review[`contact-submission:acknowledgements:${label}`] = true
+  })
+
+  const accepted = projectReviewSubmissionSchema.validate(
+    { review },
+    { abortEarly: false },
+  )
+  assert.equal(accepted.error, undefined)
+
+  const normalized = normalizeReviewAnswers(accepted.value.review)
+  assert.equal(normalized[legacyProductFormKey], undefined)
+  assert.equal(normalized.productForm, 'Other')
+  assert.equal(normalized.productFormOther, 'Software')
 })

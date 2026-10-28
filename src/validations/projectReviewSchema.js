@@ -31,7 +31,7 @@ const answerShape = {
     .trim()
     .max(2000)
     .custom((value, helpers) => {
-      if (productForms.includes(value) || /^Other:\s*\S.+$/i.test(value)) {
+      if (productForms.includes(value) || /^Other:\s*\S.*$/i.test(value)) {
         return value;
       }
       return helpers.error("any.invalid");

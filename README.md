@@ -1,38 +1,17 @@
-# Packaging Consultants API
+# Packaging Consultants USA | Express + MongoDB
 
-Express and MongoDB API for site settings and dynamic header navigation.
+See **../README.md** for complete configuration, SMTP settings, admin credentials, and verification. New API endpoints:
 
-## Setup
+- `POST /api/contact`
+- `GET /api/site-content`
+- `GET /api/content/:group/:slug`
+- `GET /api/admin/content-pages`
+- `GET/PUT /api/admin/content/:group/:slug`
+- `GET/PUT /api/admin/site-content`
+- `GET /api/admin/contact-messages`
+- `GET/PATCH /api/admin/contact-messages/:id`
+- `POST /api/admin/contact-messages/:id/resend`
+- `POST /api/admin/media` (1 image, max 10MB)
+- `GET /api/media/:name`
 
-```bash
-cp .env.example .env
-npm install
-npm run dev
-```
-
-The default database URL is `mongodb://127.0.0.1:27017/packaging-consultant`. The API automatically creates the primary `site` settings document with the reference navigation the first time it is requested. Existing pre-PDF seed data is migrated once to the exact Packaging Services labels and routes, while later admin edits remain untouched.
-
-## Routes
-
-- `GET /api/health`
-- `GET /api/settings/navigation`
-- `GET /api/admin/settings/current`
-- `PUT /api/admin/settings/current`
-- `GET /api/admin/settings`
-- `POST /api/admin/settings`
-- `GET /api/admin/settings/:id`
-- `PUT /api/admin/settings/:id`
-- `PATCH /api/admin/settings/:id`
-- `DELETE /api/admin/settings/:id`
-
-Each `topNavigation` item contains `label`, `link`, and an optional `children` array. Every child contains `label` and `link`.
-
-## Verification
-
-```bash
-npm run check
-npm test
-API_BASE_URL=http://127.0.0.1:5050 npm run verify:api
-```
-
-`verify:api` expects the API to already be running. It restores the primary navigation after testing and removes the temporary CRUD record.
+Every `/api/admin/*` endpoint (except login) uses the existing JWT middleware. New Contact submission API does not require login; it is rate limited.

@@ -4,6 +4,7 @@ import express from "express";
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
 
 import { requireAdmin } from "./middleware/requireAdmin.js";
+import { adminNotificationRouter } from "./routes/notificationRouter.js";
 
 import { adminRouter } from "./routes/adminRouter.js";
 import { adminAuthRouter } from "./routes/adminAuthRouter.js";
@@ -14,6 +15,12 @@ import {
   publicProjectReviewRouter,
   adminProjectReviewRouter,
 } from "./routes/projectReviewRouter.js";
+
+import {publicContentRouter, adminContentRouter} from "./routes/contentRouter.js";
+
+import {publicBlogRouter,adminBlogRouter} from './routes/blogRouter.js';
+
+import {publicMediaRouter,adminMediaRouter} from "./routes/mediaRouter.js";
 
 export function createApp() {
   const app = express();
@@ -50,6 +57,9 @@ export function createApp() {
   });
 
   app.use("/api", publicRouter);
+  app.use("/api", publicContentRouter);
+  app.use("/api", publicBlogRouter);
+  app.use("/api", publicMediaRouter);
 
   app.use("/api/project-reviews", publicProjectReviewRouter);
 
@@ -60,7 +70,11 @@ export function createApp() {
   app.use("/api/admin", requireAdmin);
 
   app.use("/api/admin/project-reviews", adminProjectReviewRouter);
+  app.use("/api/admin", adminNotificationRouter);
 
+  app.use("/api/admin", adminContentRouter);
+  app.use("/api/admin", adminBlogRouter);
+  app.use("/api/admin", adminMediaRouter);
   app.use("/api/admin", adminRouter);
 
   app.use(notFoundHandler);

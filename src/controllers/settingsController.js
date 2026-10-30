@@ -5,7 +5,7 @@ import { Settings } from "../models/Settings.js";
 import { normalizeTopNavigation } from "../utils/navigation.js";
 import { normalizeSocialLinks } from "../utils/socialLinks.js";
 
-const navigationPreset = "packaging-services-pdf-v5-project-pages";
+const navigationPreset = "packaging-services-pdf-v6-content-and-contact";
 const legacyArtTemplatesPdfLink =
   "/assets/templates/art-templates-choose-your-structure.pdf";
 const artTemplatesLink = {
@@ -114,6 +114,17 @@ async function getOrCreateSiteSettings() {
       });
     }
 
+    // Correct only the old dead placeholder links; keep real admin-edited destinations.
+    const replacePlaceholders={
+      '#contact':'/contact-us','#packaging-times':'https://packagingtimes.com/',
+      '#visit-packaging-times':'https://packagingtimes.com/',
+      '#packaging-news':'https://packagingtimes.com/news',
+      '#sponsored-advertisers':'https://packagingtimes.com/advertising',
+    };
+    for (const nav of existing.topNavigation) {
+      if (replacePlaceholders[nav.link]) nav.link=replacePlaceholders[nav.link];
+      for (const child of nav.children) if (replacePlaceholders[child.link]) child.link=replacePlaceholders[child.link];
+    }
     existing.navigationPreset = navigationPreset;
     return existing.save();
   }

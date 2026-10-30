@@ -90,6 +90,15 @@ const projectReviewSchema = new mongoose.Schema(
       default: "",
       maxlength: 5000,
     },
+
+    // Email status for each recipient (existing records default to pending).
+    notificationStatus: { type: String, enum: ["pending", "sent", "failed"], default: "pending" },
+    notificationError: { type: String, default: "" },
+    notifiedAt: Date,
+    clientEmailStatus: { type: String, enum: ["pending", "sent", "failed"], default: "pending" },
+    clientEmailError: { type: String, default: "" },
+    clientEmailedAt: Date,
+    adminSeenAt: { type: Date, default: null },
   },
   {
     timestamps: true,

@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { ProjectReview } from "../models/ProjectReview.js";
+import { sendProjectReviewNotification } from "../services/submissionEmail.js";
 import {
   contactKeys,
   legacyProductFormKey,
@@ -98,12 +99,19 @@ export async function submitProjectReview(request, response) {
       })),
     });
 
+    // DB save is the source of truth: SMTP failures never discard the review.
+    let delivery = { admin: {status: "pending"}, client: {status: "pending"} };
+    try {
+      delivery = await sendProjectReviewNotification(record);
+    } catch (mailError) {
+      console.error("Project Review saved but email delivery failed:", mailError.message);
+    }
+
     return response.status(201).json({
       message: "Project Review received",
-
       referenceNumber: record.referenceNumber,
-
       submissionDate: record.createdAt,
+      emailDelivery: { admin: delivery.admin.status, client: delivery.client.status },
     });
   } catch (error) {
     await cleanupUploadedFiles(files);

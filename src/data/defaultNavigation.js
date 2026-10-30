@@ -54,11 +54,11 @@ export const defaultTopNavigation = [
     ],
   },
   {
-    ...link('Packaging Times', '#packaging-times'),
+    ...link('Packaging Times', 'https://packagingtimes.com/'),
     children: [
-      link('Visit Packaging Times', '#visit-packaging-times'),
-      link('Packaging News & Features', '#packaging-news'),
-      link('Sponsored Advertisers', '#sponsored-advertisers'),
+      link('Visit Packaging Times', 'https://packagingtimes.com/'),
+      link('Packaging News & Features', 'https://packagingtimes.com/news'),
+      link('Sponsored Advertisers', 'https://packagingtimes.com/advertising'),
     ],
   },
   {
@@ -73,5 +73,5 @@ export const defaultTopNavigation = [
       link('Contact & Submission', '/project-review/contact-submission'),
     ],
   },
-  link('Contact Us', '#contact'),
+  link('Contact Us', '/contact-us'),
 ]
